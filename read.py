@@ -15,7 +15,7 @@ output_dir = 'QQ/'
 if not os.path.exists(output_dir):
     os.makedirs(output_dir)
 
-def wav_to_pickle():
+def wav_to_pickle(size=-1):
     files = os.listdir(input_dir)
     class_list = []
     wav_list = []
@@ -27,14 +27,16 @@ def wav_to_pickle():
         wav_list.append([])
         path = input_dir + f + '/'
         wav_files = os.listdir(path)
-        for wav_file in wav_files:
+        for i,wav_file in enumerate(wav_files):
+            if i == size:
+                break
             [samprate, wav] = wavfile.read(path + wav_file)
             wav_list[-1].append(wav)
     
-    file = open('class_list.pickle', 'wb')
+    file = open('class_list_'+str(size)+'.pickle', 'wb')
     pickle.dump(class_list, file)
     file.close()
-    file = open('wav_list.pickle', 'wb')
+    file = open('wav_list_'+str(size)'.pickle', 'wb')
     pickle.dump(wav_list, file)
     file.close()
 
@@ -54,9 +56,9 @@ def wav_to_2D(wav_lsit, class_list, width, height, size):
                 break
         
 
-
-with open('wav_list.pickle', 'rb') as file:
-    wav_list =pickle.load(file)
-with open('class_list.pickle', 'rb') as file:
-    class_list =pickle.load(file)
-wav_to_2D(wav_list, class_list, 128, 64, 100)
+wav_to_pickle(100)
+# with open('wav_list.pickle', 'rb') as file:
+#     wav_list =pickle.load(file)
+# with open('class_list.pickle', 'rb') as file:
+#     class_list =pickle.load(file)
+# wav_to_2D(wav_list, class_list, 128, 64, 100)
